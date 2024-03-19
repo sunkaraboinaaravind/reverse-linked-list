@@ -1,0 +1,40 @@
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        # two pointer solution and a set TC O(n), SC O(n)
+        # if len(s) is 0 or 1, return it
+        if len(s) < 2:
+            return len(s)
+
+        # init the 2 pointers and keep track of a set of unqiue chars in between [trailingI, leadingI)
+
+        trailingI, leadingI = len(s) - 1, len(s) - 2
+        uniqueChars = {s[len(s) - 1]}
+        result = setSize = 1
+
+        while leadingI > -1:
+            newChar = s[leadingI]
+            if newChar in uniqueChars:
+                # advance leftI until it's at the previous instance of newChar
+                while (s[trailingI] != newChar):
+                    uniqueChars.remove(s[trailingI])
+                    setSize -= 1
+                    trailingI -= 1
+                
+                # advance both indices
+                trailingI -= 1
+                leadingI -= 1
+
+            else:
+                # this char is unique, add it to the set, check the new set size, and advance leadingI
+                uniqueChars.add(newChar)
+                setSize += 1
+                result = max(result, setSize)
+                leadingI -= 1
+
+        return result
+
+        # if there is time...
+        # there is a solution to do this in TC O(n), SC O(1) by removing elements from s while we go (destroys s)
+
+        # modify algo to go right to left
+        # whenever we move rightI (trailingI), delete the elements behind it
